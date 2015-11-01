@@ -1,38 +1,40 @@
 #include <stdlib.h>
-#include <stdbool.h>
-#include <assert.h>
 #include <immintrin.h>
 
-struct locker *locker_init(int type)
-{
-        struct locker *l = malloc(sizeof(struct locker));
-        assert(l != NULL);
-        l->lock = (enum lock_states) malloc(sizeof(unlocked));
-        l->lock = unlocked;
-        l->lock_type = type;
-        return l;
-}
+#include <hle-emulation.h>
+#include <locker.h>
 
-void acquire(struct locker *l)
+void acquire(int* lock)
 {
-        int ll, ul;
-        ll = locked;
-        ul = unlocked;
-        int *ulp = (int*)&ul;
+        int ll = LOCKED;
+        int ul = UNLOCKED;
         do {
-                ul = unlocked;
-                ulp = (int*)&ul;
+                ul = UNLOCKED;
                 _mm_pause();
         } while (
-                __atomic_compare_exchange_n(&l->lock,
-                                            ulp,
-                                            (int*)&ll,
-                                            true,
-                                            l->lock_type,
-                                            l->lock_type) != true);
+                __atomic_compare_exchange_n(lock,
+                                            &ul,
+                                            ll,
+                                            1,
+                                            __ATOMIC_ACQUIRE,
+                                            __ATOMIC_ACQUIRE) != 1);
 }
 
-void release(struct locker *l)
+void acquire_hle(unsigned int* lock)
 {
-        __atomic_store_n(&l->lock, unlocked, l->lock_type);
+        while (__hle_acquire_test_and_set4(lock) == 1) {
+                while (*lock == 0)
+                        _mm_pause();
+        }
+}
+
+void release_hle(unsigned int* lock)
+{
+        __hle_release_clear4(lock);
+}
+
+
+void release(int* lock)
+{
+        __atomic_store_n(lock, UNLOCKED, __ATOMIC_RELEASE);
 }

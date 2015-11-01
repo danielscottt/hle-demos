@@ -1,7 +1,7 @@
-hle-demo
+hle-demos
 ========
 
-A C progam that takes a bunch of locks in small thread pools pinned to a core, and showcases the performance benefits of Intel® HLE.
+Some progams that showcase the performance benefits of Intel® HLE
 
 ## What is HLE?
 

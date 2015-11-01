@@ -1,10 +1,8 @@
-enum lock_states {unlocked, locked};
+#define UNLOCKED 0
+#define LOCKED 1
 
-struct locker {
-        enum lock_states lock;
-        int lock_type;
-};
+void acquire(int* lock);
+void release(int* lock);
 
-struct locker *locker_init(int type);
-void acquire(struct locker *l);
-void release(struct locker *l);
+void acquire_hle(unsigned int* lock);
+void release_hle(unsigned int* lock);
