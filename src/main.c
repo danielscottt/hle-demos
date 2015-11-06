@@ -7,7 +7,6 @@
 #include <mach/mach.h>
 #include <signal.h>
 
-#include <hle-emulation.h>
 #include <locker.h>
 
 #define HLE_TYPE 0

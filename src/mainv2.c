@@ -2,9 +2,7 @@
 #include <unistd.h>
 #include <string.h>
 #include <pthread.h>
-#include <immintrin.h>
 
-#include <hle-emulation.h>
 #include <locker.h>
 
 #define POOL_SIZE 4
