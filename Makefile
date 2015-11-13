@@ -1,3 +1,6 @@
+default:
+	$(MAKE) avg
+	$(MAKE) cthreads
 avg:
 	mkdir -p build
 	gcc -g --std=gnu99 -c -I include -o build/liblocker.so src/locker.c
